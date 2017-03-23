@@ -1,10 +1,12 @@
+#include <limits.h>
+
 
 #ifndef __SFXTREE_H__
 #define __SFXTREE_H__
 
 
 typedef struct {
-  int start, end;   /* end not included */
+  int start, end;   /* end not included; end == INT_MAX => end of string */
 } range_t;
 
 #define RANGE_LEN(r) (((r)).end - ((r)).start)

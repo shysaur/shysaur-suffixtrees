@@ -6,8 +6,11 @@
 
 void printrange(const char *str, range_t sfx)
 {
-  for (int i=sfx.start; i<sfx.end; i++)
+  for (int i=sfx.start; i<sfx.end; i++) {
     putchar(str[i] == '\0' ? '$' : str[i]);
+    if (str[i] == '\0')
+      return;
+  }
 }
 
 
@@ -44,37 +47,38 @@ void printtree(const char *str, const treenode_t *root)
  * McCreight calls this function "rescanning" */
 splitpoint_t fastscan(const char *str, const range_t *ss, treenode_t *tree)
 {
-  splitpoint_t pos = {NULL, NULL, 0};
   range_t sfx = *ss;
+  splitpoint_t pos = {tree, tree, RANGE_LEN(sfx)};
   range_t arc = {0, 0};
-  treenode_t *cur_child = tree;
   
   while (sfx.end > sfx.start) {
-    tree = cur_child;
+    pos.parent = pos.child;
     
-    cur_child = tree->first_child;
-    while (cur_child) {
-      arc = cur_child->arc_val;
+    pos.child = pos.parent->first_child;
+    while (pos.child) {
+      arc = pos.child->arc_val;
       if (str[sfx.start] == str[arc.start])
         break;
-      cur_child = cur_child -> next_sibling;
+      pos.child = pos.child->next_sibling;
     }
       
-    if (!cur_child)
-      return pos;
+    if (!pos.child)
+      break;
+      
+    int d = pos.arcpos - RANGE_LEN(arc);
+    if (d >= 0) {
+      pos.arcpos = d;
+      if (d == 0) {
+        pos.parent = pos.child;
+        pos.child = NULL;
+        break;
+      }
+    } else
+      break;
     
-    sfx.start += arc.end - arc.start;
+    sfx.start += RANGE_LEN(arc);
   }
-  
-  if (sfx.start - sfx.end != 0) {
-    pos.parent = tree;
-    pos.child = cur_child;
-    pos.arcpos = (arc.end - arc.start) - (sfx.start - sfx.end);
-  } else {
-    pos.parent = cur_child;
-    pos.child = NULL;
-    pos.arcpos = 0;
-  }
+
   return pos;
 }
 
@@ -88,6 +92,9 @@ splitpoint_t slowscan(const char *str, const range_t *ss, treenode_t *tree)
   treenode_t *cur_child = tree;
   range_t arc = {0, 0};
   
+  if (sfx.start == sfx.end)
+    return pos;
+  
   while (arc.start == arc.end && sfx.start < sfx.end) {
     tree = cur_child;
     
@@ -96,7 +103,7 @@ splitpoint_t slowscan(const char *str, const range_t *ss, treenode_t *tree)
       arc = cur_child->arc_val;
       if (str[sfx.start] == str[arc.start])
         break;
-      cur_child = cur_child -> next_sibling;
+      cur_child = cur_child->next_sibling;
     }
       
     if (!cur_child) {
