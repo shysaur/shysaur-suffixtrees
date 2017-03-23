@@ -7,6 +7,8 @@ typedef struct {
   int start, end;   /* end not included */
 } range_t;
 
+#define RANGE_LEN(r) (((r)).end - ((r)).start)
+
 
 typedef struct treenode_s {
   range_t arc_val;    /* substr of *arc* which led here. start==end==0 for root */

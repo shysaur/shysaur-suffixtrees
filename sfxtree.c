@@ -172,7 +172,7 @@ treenode_t *newchild(treenode_t *parent, const range_t *node_val)
   
   new->node_val = *node_val;
   new->arc_val.end = node_val->end;
-  new->arc_val.start = node_val->start + (parent->node_val.end - parent->node_val.start);
+  new->arc_val.start = node_val->start + RANGE_LEN(parent->node_val);
   
   return new;
 }
