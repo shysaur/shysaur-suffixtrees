@@ -13,7 +13,7 @@ OBJ	= $(patsubst %, $(OBJDIR)/%, $(_SOURCE:.c=.o))
 .PHONY:	all
 .PHONY:	clean
 
-all:	$(OBJDIR) naive mccreight
+all:	$(OBJDIR) naive mccreight ukkonen
 
 $(OBJDIR):	
 	mkdir -p $(OBJDIR)
@@ -24,6 +24,9 @@ naive:	$(OBJ) $(OBJDIR)/naive.o
 mccreight:	$(OBJ) $(OBJDIR)/mccreight.o
 	$(CC) -o $@ $^ $(CFLAGS)
 
+ukkonen:	$(OBJ) $(OBJDIR)/ukkonen.o
+	$(CC) -o $@ $^ $(CFLAGS)
+
 $(OBJDIR)/%.o:	%.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
@@ -31,4 +34,4 @@ $(OBJDIR)/%.o:	%.m $(DEPS)
 	$(CC) -c -o $@ $< $(OBJCFLAGS)
 
 clean:
-	rm -f $(OBJDIR)/*.o naive mccreight
+	rm -f $(OBJDIR)/*.o naive mccreight ukkonen
