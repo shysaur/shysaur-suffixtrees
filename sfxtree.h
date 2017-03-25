@@ -39,6 +39,7 @@ typedef struct {
 
 void printRange(const char *str, range_t sfx);
 void printTree(const char *str, const treenode_t *root);
+void freeTree(treenode_t *root);
 
 treepoint_t fastScan(const char *str, const range_t *ss, treenode_t *tree);
 treepoint_t slowScan(const char *str, const range_t *ss, const treepoint_t *start);

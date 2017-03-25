@@ -42,6 +42,16 @@ void printTree(const char *str, const treenode_t *root)
 }
 
 
+void freeTree(treenode_t *root)
+{
+  if (root->first_child)
+    freeTree(root->first_child);
+  if (root->next_sibling)
+    freeTree(root->next_sibling);
+  free(root);
+}
+
+
 /* Search where, in the tree, the string sfx appears. It must be
  * present in the tree in its entirety (not necessarily at a leaf node) 
  * McCreight calls this function "rescanning" */
