@@ -128,7 +128,7 @@ treenode_t *splitAtPoint(const treepoint_t *pos)
   if (pos->arcpos == 0)
     return pos->parent;
   
-  treenode_t *new = calloc(1, sizeof(treenode_t));
+  treenode_t *new = malloc(sizeof(treenode_t));
   
   if (pos->child->prev_sibling == NULL)
     pos->parent->first_child = new;
@@ -153,19 +153,24 @@ treenode_t *splitAtPoint(const treepoint_t *pos)
   new->node_val.start = pos->child->node_val.start;
   new->node_val.end = new->arc_val.end;
   
+  new->suffix_link = NULL;
+  
   return new;
 }
 
 
 treenode_t *newChild(treenode_t *parent, const range_t *node_val)
 {
-  treenode_t *new = calloc(1, sizeof(treenode_t));
+  treenode_t *new = malloc(sizeof(treenode_t));
   
   new->next_sibling = parent->first_child;
+  new->prev_sibling = NULL;
+  new->first_child = NULL;
   if (parent->first_child)
     parent->first_child->prev_sibling = new;
   parent->first_child = new;
   new->parent = parent;
+  new->suffix_link = NULL;
   
   new->node_val = *node_val;
   new->arc_val.end = node_val->end;
