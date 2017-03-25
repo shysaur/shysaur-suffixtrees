@@ -4,7 +4,7 @@
 #include <string.h>
 
 
-void printrange(const char *str, range_t sfx)
+void printRange(const char *str, range_t sfx)
 {
   for (int i=sfx.start; i<sfx.end; i++) {
     putchar(str[i] == '\0' ? '$' : str[i]);
@@ -19,7 +19,7 @@ void _printtree(const char *str, const treenode_t *root)
   printf("L%p [label=\"\" shape=point];\n", root);
   if (root->parent) {
     printf("L%p -> L%p [label=\"'", root->parent, root);
-    printrange(str, root->arc_val);
+    printRange(str, root->arc_val);
     printf("'\"];\n");
   }
   if (root->suffix_link) {
@@ -34,7 +34,7 @@ void _printtree(const char *str, const treenode_t *root)
 }
 
 
-void printtree(const char *str, const treenode_t *root)
+void printTree(const char *str, const treenode_t *root)
 {
   printf("digraph G {\n");
   _printtree(str, root);
@@ -45,10 +45,10 @@ void printtree(const char *str, const treenode_t *root)
 /* Search where, in the tree, the string sfx appears. It must be
  * present in the tree in its entirety (not necessarily at a leaf node) 
  * McCreight calls this function "rescanning" */
-splitpoint_t fastscan(const char *str, const range_t *ss, treenode_t *tree)
+treepoint_t fastScan(const char *str, const range_t *ss, treenode_t *tree)
 {
   range_t sfx = *ss;
-  splitpoint_t pos = {tree, tree, RANGE_LEN(sfx)};
+  treepoint_t pos = {tree, tree, RANGE_LEN(sfx)};
   range_t arc = {0, 0};
   
   while (sfx.end > sfx.start) {
@@ -85,10 +85,10 @@ splitpoint_t fastscan(const char *str, const range_t *ss, treenode_t *tree)
 
 /* Search where the longest prefix of sfx (head(sfx)) is located in the tree. 
  * McCreight calls this function "scanning" */
-splitpoint_t slowscan(const char *str, const range_t *ss, const splitpoint_t *start)
+treepoint_t slowScan(const char *str, const range_t *ss, const treepoint_t *start)
 {
   range_t sfx = *ss;
-  splitpoint_t pos = *start;
+  treepoint_t pos = *start;
   
   while (sfx.end > sfx.start) {
     if (pos.arcpos == 0) {
@@ -123,7 +123,7 @@ splitpoint_t slowscan(const char *str, const range_t *ss, const splitpoint_t *st
 }
 
 
-treenode_t *splitatpoint(const splitpoint_t *pos)
+treenode_t *splitAtPoint(const treepoint_t *pos)
 {
   if (pos->arcpos == 0)
     return pos->parent;
@@ -157,7 +157,7 @@ treenode_t *splitatpoint(const splitpoint_t *pos)
 }
 
 
-treenode_t *newchild(treenode_t *parent, const range_t *node_val)
+treenode_t *newChild(treenode_t *parent, const range_t *node_val)
 {
   treenode_t *new = calloc(1, sizeof(treenode_t));
   

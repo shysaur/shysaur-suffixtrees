@@ -4,48 +4,73 @@
 #include <string.h>
 
 
-treenode_t *mccreight(const char *str)
+/* 
+ * Primary reference: McCreight, Edward M. "A space-economical suffix tree 
+ * construction algorithm." Journal of the ACM (JACM) 23.2 (1976): 262-272. 
+ * 
+ * The names of most variables are consistent with the terminology used by
+ * McCreight.
+ */
+
+
+treenode_t *suffixTree_mcCreight(const char *str)
 {
   range_t s = {0, strlen(str)+1};
   
   treenode_t *root = calloc(1, sizeof(treenode_t));
   root->suffix_link = root;
   
-  newchild(root, &s);
+  newChild(root, &s);
   
+  /* Loop invariant: active_node must represent a prefix of the current
+   * suffix */
   treenode_t *active_node = root;
   
+  /* Suffixes are inserted in order from the longest to the shortest. */
   for (int i=1; i<s.end; i++) {
-    splitpoint_t headsp;
+    range_t suf = {i, s.end};  /* suffix that will be inserted */
     
-    /* adjust active_node to be exactly at the head */
+    /* Search for the current 'head' by scanning until we reach the
+     * first character that does not match or we "fall out" of the tree.
+     * The 'head' is defined as the longest prefix of the current suffix
+     * that is already present in the tree as a prefix of another suffix. 
+     * 'tail' is the rest of the suffix (the part after the head).
+     * gamma is the last part of 'head' that has to be scanned. */
     range_t partial_head = active_node->node_val;
-    int rest_end = RANGE_LEN(partial_head) + i;
-    range_t rest = {rest_end, s.end};
-    splitpoint_t start = {active_node, NULL, 0};
-    headsp = slowscan(str, &rest, &start);
+    int gamma_start = RANGE_LEN(partial_head) + i;
+    range_t gammatail = {gamma_start, s.end};
+    treepoint_t start = {active_node, NULL, 0};
+    treepoint_t head = slowScan(str, &gammatail, &start);
     
-    active_node = splitatpoint(&headsp);
+    /* Split where 'head' ends and insert the new suffix */
+    active_node = splitAtPoint(&head);
+    newChild(active_node, &suf);
     
-    int head_end = RANGE_LEN(active_node->node_val) + i;
-    range_t ss = {i, s.end};
-    newchild(active_node, &ss);
-    
+    /* Set the suffix link of the head node, if needed */
     if (active_node->suffix_link == NULL) {
-      splitpoint_t prefspl;
+      treepoint_t prefspl;
+            
+      /* Search the location in the tree of the current head without the
+       * first character. Use the suffix link of the parent to speed it up. */
+      range_t csialphabeta = active_node->node_val;
+      /* alphabeta: current head except the first character (csi).
+       * The case where csi is empty is implicitly handled. */
+      range_t alphabeta = {csialphabeta.start+1, csialphabeta.end};
+      /* beta: portion of head on the last arc in the path to head
+       * alpha: alphabeta without beta */
+      treenode_t *alpha_node = active_node->parent->suffix_link;
+      range_t alpha = alpha_node->node_val;
+      range_t beta = {alphabeta.start + RANGE_LEN(alpha), alphabeta.end};
+      treepoint_t alphabeta_point = fastScan(str, &beta, alpha_node);
       
-      /* set the suffix link searching for {i+1, head_end}. use the suffix
-       * link of the parent to speed it up */
-      range_t prefix_nexthead = {i+1, head_end};
-      treenode_t *pfx_nexth_parent = active_node->parent->suffix_link;
-      range_t r = pfx_nexth_parent->node_val;
-      prefix_nexthead.start += RANGE_LEN(r);
-      prefspl = fastscan(str, &prefix_nexthead, pfx_nexth_parent);
-      
-      treenode_t *linkt = splitatpoint(&prefspl);
+      treenode_t *linkt = splitAtPoint(&alphabeta_point);
       active_node->suffix_link = linkt;
     }
     
+    /* Lemma 1 in McCreight's paper states that by removing the 1st character
+     * from the current prefix's head, we get a prefix of the next suffix's
+     * head. Thus we can use the suffix link to speed up the search for
+     * the next head. */
     active_node = active_node->suffix_link;
   }
   
@@ -58,8 +83,8 @@ int main(int argc, char *argv[])
   if (argc < 2)
     return 1;
   char *str = argv[1];
-  treenode_t *t = mccreight(str);
-  printtree(str, t);
+  treenode_t *t = suffixTree_mcCreight(str);
+  printTree(str, t);
   return 0;
 }
 

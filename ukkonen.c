@@ -13,7 +13,7 @@ treenode_t *ukkonen(const char *str)
   
   /* loop invariant: active_pos must be the position in the tree where the
    * preexisting suffix we want to extend ends */
-  splitpoint_t active_pos = {root, NULL, 0};
+  treepoint_t active_pos = {root, NULL, 0};
   
   int j=0;
   /* i: character read at this stage + 1 */
@@ -26,7 +26,7 @@ treenode_t *ukkonen(const char *str)
     
       /* rule 3: is {j, i} in the tree? */
       range_t rest = {i-1, i};
-      active_pos = slowscan(str, &rest, &active_pos);
+      active_pos = slowScan(str, &rest, &active_pos);
       
       if (POINT_LEN(active_pos) == RANGE_LEN(csfx)) {
         /* yes: fast forward rule 3 for all other j's and increment i 
@@ -38,13 +38,13 @@ treenode_t *ukkonen(const char *str)
       }
               
       /* rule 2: {j, i} not in the tree; do the split and add it */
-      active_pos.parent = splitatpoint(&active_pos);
+      active_pos.parent = splitAtPoint(&active_pos);
       range_t ss = {j, INT_MAX};
-      newchild(active_pos.parent, &ss);
+      newChild(active_pos.parent, &ss);
       
       /* active node is the point of the last insertion */
       if (active_pos.parent->suffix_link == NULL) {
-        splitpoint_t prefspl;
+        treepoint_t prefspl;
       
         /* set the suffix link searching for {j+1, i-1}. use the suffix
          * link of the parent to speed it up */
@@ -52,9 +52,9 @@ treenode_t *ukkonen(const char *str)
         treenode_t *pfx_nexth_parent = active_pos.parent->parent->suffix_link;
         range_t r = pfx_nexth_parent->node_val;
         prefix_nexthead.start += RANGE_LEN(r);
-        prefspl = fastscan(str, &prefix_nexthead, pfx_nexth_parent);
+        prefspl = fastScan(str, &prefix_nexthead, pfx_nexth_parent);
       
-        treenode_t *linkt = splitatpoint(&prefspl);
+        treenode_t *linkt = splitAtPoint(&prefspl);
         active_pos.parent->suffix_link = linkt;
       }
         
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
     return 1;
   char *str = argv[1];
   treenode_t *t = ukkonen(str);
-  printtree(str, t);
+  printTree(str, t);
   return 0;
 }
 
