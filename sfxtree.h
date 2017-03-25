@@ -9,8 +9,6 @@ typedef struct {
   int start, end;   /* end not included; end == INT_MAX => end of string */
 } range_t;
 
-#define RANGE_LEN(r) (((r)).end - ((r)).start)
-
 
 typedef struct treenode_s {
   range_t arc_val;    /* substr of *arc* which led here. start==end==0 for root */
@@ -29,6 +27,11 @@ typedef struct {
   int arcpos;
 } splitpoint_t;
 
+
+/* length of a range_t */
+#define RANGE_LEN(r) (((r)).end - ((r)).start)
+/* length of a splitpoint_t */
+#define POINT_LEN(r) (((r)).arcpos + RANGE_LEN(((r)).parent->node_val))
 
 void printrange(const char *str, range_t sfx);
 void printtree(const char *str, const treenode_t *root);
