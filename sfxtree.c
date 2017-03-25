@@ -85,50 +85,40 @@ splitpoint_t fastscan(const char *str, const range_t *ss, treenode_t *tree)
 
 /* Search where the longest prefix of sfx (head(sfx)) is located in the tree. 
  * McCreight calls this function "scanning" */
-splitpoint_t slowscan(const char *str, const range_t *ss, treenode_t *tree)
+splitpoint_t slowscan(const char *str, const range_t *ss, const splitpoint_t *start)
 {
   range_t sfx = *ss;
-  splitpoint_t pos = {tree, NULL, 0};
-  treenode_t *cur_child = tree;
-  range_t arc = {0, 0};
+  splitpoint_t pos = *start;
   
-  if (sfx.start == sfx.end)
-    return pos;
-  
-  while (arc.start == arc.end && sfx.start < sfx.end) {
-    tree = cur_child;
+  while (sfx.end > sfx.start) {
+    if (pos.arcpos == 0) {
+      /* on an edge */
+      pos.child = pos.parent->first_child;
+      while (pos.child) {
+        if (str[sfx.start] == str[pos.child->arc_val.start])
+          break;
+        pos.child = pos.child->next_sibling;
+      }
     
-    cur_child = tree->first_child;
-    while (cur_child) {
-      arc = cur_child->arc_val;
-      if (str[sfx.start] == str[arc.start])
+      if (!pos.child)
         break;
-      cur_child = cur_child->next_sibling;
-    }
-      
-    if (!cur_child) {
-      pos.parent = tree;
-      pos.child = NULL;
-      pos.arcpos = 0;
-      return pos;
+        
+    } else {
+      /* on an arc */
+      if (str[pos.child->arc_val.start + pos.arcpos] != str[sfx.start])
+        break;
     }
     
-    pos.parent = tree;
-    pos.child = cur_child;
-    pos.arcpos = 0;
-    while (arc.start < arc.end && sfx.start < sfx.end && 
-           str[arc.start] == str[sfx.start]) {
-      arc.start++;
-      sfx.start++;
-      pos.arcpos++;
+    pos.arcpos++;
+    sfx.start++;
+    
+    if (pos.arcpos == RANGE_LEN(pos.child->arc_val)) {
+      /* from an arc to the next edge */
+      pos.parent = pos.child;
+      pos.arcpos = 0;
     }
   }
   
-  if (arc.start == arc.end) {
-    pos.parent = pos.child;
-    pos.child = NULL;
-    pos.arcpos = 0;
-  }
   return pos;
 }
 

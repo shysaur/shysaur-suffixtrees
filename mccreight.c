@@ -22,7 +22,8 @@ treenode_t *mccreight(const char *str)
     range_t partial_head = active_node->node_val;
     int rest_end = RANGE_LEN(partial_head) + i;
     range_t rest = {rest_end, s.end};
-    headsp = slowscan(str, &rest, active_node);
+    splitpoint_t start = {active_node, NULL, 0};
+    headsp = slowscan(str, &rest, &start);
     
     active_node = splitatpoint(&headsp);
     

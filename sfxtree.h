@@ -37,7 +37,7 @@ void printrange(const char *str, range_t sfx);
 void printtree(const char *str, const treenode_t *root);
 
 splitpoint_t fastscan(const char *str, const range_t *ss, treenode_t *tree);
-splitpoint_t slowscan(const char *str, const range_t *ss, treenode_t *tree);
+splitpoint_t slowscan(const char *str, const range_t *ss, const splitpoint_t *start);
 treenode_t *splitatpoint(const splitpoint_t *pos);
 treenode_t *newchild(treenode_t *parent, const range_t *node_val);
 

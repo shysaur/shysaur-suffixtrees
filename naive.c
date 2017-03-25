@@ -13,7 +13,8 @@ treenode_t *sfxtree(const char *str)
   
   for (int i=1; i<s.end; i++) {
     range_t thispfx = {i, s.end};
-    splitpoint_t split = slowscan(str, &thispfx, root);
+    splitpoint_t start = {root, NULL, 0};
+    splitpoint_t split = slowscan(str, &thispfx, &start);
     
     treenode_t *n = splitatpoint(&split);
     treenode_t *m = newchild(n, &thispfx);
