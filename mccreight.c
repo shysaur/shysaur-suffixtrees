@@ -1,4 +1,5 @@
 #include "sfxtree.h"
+#include "benchmark.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -80,11 +81,13 @@ treenode_t *suffixTree_mcCreight(const char *str)
 
 int main(int argc, char *argv[])
 {
-  if (argc < 2)
-    return 1;
-  char *str = argv[1];
-  treenode_t *t = suffixTree_mcCreight(str);
-  printTree(str, t);
+  if (argc < 2) {
+    benchmark(suffixTree_mcCreight);
+  } else {
+    char *str = argv[1];
+    treenode_t *t = suffixTree_mcCreight(str);
+    printTree(str, t);
+  }
   return 0;
 }
 

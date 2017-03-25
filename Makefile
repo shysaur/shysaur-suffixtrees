@@ -4,8 +4,8 @@ OBJCFLAGS	+= $(CFLAGS)
 
 OBJDIR	= obj
 
-_DEPS	= sfxtree.h
-_SOURCE	= sfxtree.c
+_DEPS	= sfxtree.h benchmark.h
+_SOURCE	= sfxtree.c benchmark.c
 
 DEPS	= $(_DEPS)
 OBJ	= $(patsubst %, $(OBJDIR)/%, $(_SOURCE:.c=.o))
