@@ -34,12 +34,12 @@ I have not tested it yet.
 ## References
 
 For understanding both McCreight's algorithm and Ukkonen's algorithm, I found
-[these lecture
-slides](http://users-birc.au.dk/cstorm/courses/StrAlg_f12/slides/suffix-tree-
-construction.pdf) by [Thomas
-Mailund](http://users-birc.au.dk/mailund/new/index.html) very useful. They use a
-more visual approach than most other material I've read; if you like visualizing
-things in your head to understand them, they will most definitively be useful.
+[these lecture 
+slides](http://users-birc.au.dk/cstorm/courses/StrAlg_f12/slides/suffix-tree-construction.pdf)
+by [Thomas Mailund](http://users-birc.au.dk/mailund/new/index.html) very useful.
+They use a more visual approach than most other material I've read; if you like
+visualizing things in your head to understand them, they will most definitively
+be useful.
 
 Despite their very good description, the implementation of McCreight's algorithm
 found in Mailund's slides is a bit chaotic because it does not properly
