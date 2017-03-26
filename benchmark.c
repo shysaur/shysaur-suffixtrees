@@ -171,9 +171,11 @@ void benchmark(treenode_t *(*sfxt)(const char *str))
     "f(x) = a*x**2 + b*x + c\n"
     "fit f(x) $data u 1:2 via a, b, c\n"
     "title_f(a, b, c) = sprintf('f(x) = %.2fx^2 + %.2fx + %.2f', a, b, c)\n"
+    "set palette rgbformulae 33, 13, 10\n"
     "set xlabel \"strlen(s)\"\n"
     "set ylabel \"T [ns]\"\n"
-    "plot $data using 1:2 t \"data\", f(x) t title_f(a, b, c)\n");
+    "set cblabel \"complexity\"\n"
+    "plot $data using 1:2:3 w points palette t \"data\", f(x) t title_f(a, b, c)\n");
 }
 
 
