@@ -5,3 +5,6 @@ Suffix Trees
 ukkonen
 *.log
 *.gnuplot
+*.plt
+*.exe
+/vsproj

@@ -24,12 +24,10 @@ gnuplot/graphviz if you're in a hurry.
 These algorithms can be compiled with [gcc](https://gcc.gnu.org/) or 
 [clang](http://clang.llvm.org/) on Linux and OS X, or with 
 [mingw-w64](http://mingw-w64.org/doku.php) on Windows. Just open a shell
-and run `make`. At this moment they have been tested on OS X only, but
-except for the benchmark stuff they should already be portable enough.
+and run `make`.
 
 If you want to compile with Visual Studio on Windows, you'll have to make
-the Visual Studio project yourself. It should work without modifications but
-I have not tested it yet.
+the Visual Studio project yourself. It should work without modifications.
 
 ## References
 
