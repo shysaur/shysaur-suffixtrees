@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <inttypes.h>
 #include <math.h>
 #ifdef __APPLE__
 #include <mach/mach_time.h>
@@ -9,7 +10,6 @@
 #include <windows.h>
 #elif __linux__
 #include <time.h>
-#include <bsd/stdlib.h>
 #elif
 #define NOBENCH
 #endif
@@ -163,7 +163,7 @@ void benchmark(treenode_t *(*sfxt)(const char *str))
     for (i=0; i<SAMPLE_SIZE+PREHEAT_SIZE; i++)
       freeTree(trees[i]);
     
-    printf("%d, %llu.%llu, %d, %s\n", l, 
+    printf("%d, %" PRIu64 ".%" PRIu64 ", %d, %s\n", l, 
       time/SAMPLE_SIZE, time%SAMPLE_SIZE, e, buf);
   }
   
