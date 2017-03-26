@@ -70,8 +70,6 @@ treenode_t *suffixTree_ukkonen(const char *str)
       /* Set the suffix link of the new internal node produced by applying 
        * rule 2 (which is currently in active_pos.parent). */
       if (active_pos.parent->suffix_link == NULL) {
-        treepoint_t prefspl;
-      
         /* Set the suffix link from the new internal node {j, i-1} to 
          * {j+1, i-1}. Use the suffix link of the parent (which points to
          * {j+1, alpha} where alpha < i-1) to speed it up. */

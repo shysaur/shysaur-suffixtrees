@@ -49,8 +49,6 @@ treenode_t *suffixTree_mcCreight(const char *str)
     
     /* Set the suffix link of the head node, if needed */
     if (active_node->suffix_link == NULL) {
-      treepoint_t prefspl;
-            
       /* Search the location in the tree of the current head without the
        * first character. Use the suffix link of the parent to speed it up. */
       range_t csialphabeta = active_node->node_val;
