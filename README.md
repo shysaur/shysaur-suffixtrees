@@ -87,7 +87,6 @@ Symposium on Switching and Automata Theory, pp. 1–11
 McCreight, Edward M. (1976), "A Space-Economical Suffix Tree Construction
 Algorithm", Journal of the ACM, 23 (2): 262–272
 
-Weiner, P. (1973), "Linear pattern matching algorithms", 14th Annual IEEE
-Symposium on Switching and Automata Theory, pp. 1–11
+Ukkonen, E. (1995), "On-line construction of suffix trees", Algorithmica, 14 (3): 249–260
 
 
