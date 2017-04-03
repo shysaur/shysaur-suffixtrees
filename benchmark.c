@@ -97,25 +97,27 @@ int randomInRange(int a, int b)
 }
 
 
+#define CHARSET_END ('z'+1)    /* not included */
+#define CHARSET_START ('a')
+
 void genTestCase(int len, char *out, int entropy)
 {
-  int i, j, s, e;
+  int i, lme=0, ume=0;
   
-  for (i=0; i<len; i++)
-    out[i] = (char)randomInRange('a', 'z'+1);
-    
-  j = 0;
-  for (i=1; i<len; i++) {
-    if (randomInRange(0, 49) >= entropy) {
-      s = randomInRange(j, i-1);
-      e = randomInRange(s+1, i);
-      for (; i<len && s<e; i++)
-        out[i] = out[s++];
-      j = e;
-      i--;
+  for (i=0; i<len; i++) {
+    if (i == 0) {
+      out[i] = (char)randomInRange(CHARSET_START, CHARSET_END);
+    } else {
+      int lm = (CHARSET_START - out[i-1]) * entropy + lme;
+      lme = lm % 50;
+      int um = (CHARSET_END - out[i-1]) * entropy + ume;
+      ume = um % 50;
+      lm /= 50;
+      um /= 50;
+      out[i] = out[i-1] + randomInRange(lm, um);
     }
   }
-    
+  
   out[i] = '\0';
 }
 
@@ -146,7 +148,7 @@ void benchmark(treenode_t *(*sfxt)(const char *str))
     else if (c == 1)
       e = 49;
     else
-      e = randomInRange(1, 25);
+      e = randomInRange(1, 10);
     l = randomInRange(MIN_STR, MAX_STR);
     genTestCase(l, buf, e);
     
