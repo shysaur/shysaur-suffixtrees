@@ -165,8 +165,9 @@ void benchmark(treenode_t *(*sfxt)(const char *str))
     for (i=0; i<SAMPLE_SIZE+PREHEAT_SIZE; i++)
       freeTree(trees[i]);
     
-    printf("%d, %" PRIu64 ".%" PRIu64 ", %d, %s\n", l, 
-      time/SAMPLE_SIZE, time%SAMPLE_SIZE, e, buf);
+    printf("%d, %" PRIu64 ".%04" PRIu64 ", %d, %s\n", l, 
+      time / (SAMPLE_SIZE * 1000), 
+      (time % (SAMPLE_SIZE * 1000)) * 10000/(SAMPLE_SIZE * 1000), e, buf);
   }
   
   puts("END\n"
@@ -175,7 +176,7 @@ void benchmark(treenode_t *(*sfxt)(const char *str))
     "title_f(a, b, c) = sprintf('f(x) = %.2fx^2 + %.2fx + %.2f', a, b, c)\n"
     "set palette rgbformulae 33, 13, 10\n"
     "set xlabel \"strlen(s)\"\n"
-    "set ylabel \"T [ns]\"\n"
+    "set ylabel \"T [us]\"\n"
     "set cblabel \"complexity\"\n"
     "plot $data using 1:2:3 w points palette t \"data\", f(x) t title_f(a, b, c)\n");
 }
